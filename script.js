@@ -7,6 +7,7 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const intro = $('#intro'), app = $('#app'), introVideo = $('#intro-video'), background = $('#background-video');
   let active = 'menu', switching = false, started = false, videoPaused = false;
+  let introMusicStarted = false;
   let gameTimer, celebrationTimer, gameBusy = false, goals = 0, attempts = 0;
   const memoriesUnlocked = new Set();
   const wait = ms => new Promise(resolve => setTimeout(resolve, reduced.matches ? 0 : ms));
@@ -74,7 +75,7 @@
       const music = this.ensureMusic();
       if (!music) return;
       this.enabled = true;
-      music.play().then(() => this.syncToggle()).catch(() => {
+      music.play().then(() => { introMusicStarted = true; this.syncToggle(); }).catch(() => {
         // Respaldo para navegadores que bloquean sonido antes del primer gesto.
         this.enabled = false;
         this.syncToggle();
@@ -197,7 +198,8 @@
   }
   function activateIntro() {
     const music = audio.ensureMusic();
-    if (music?.paused) {
+    if (music && !introMusicStarted) {
+      introMusicStarted = true;
       audio.setEnabled(true);
       $('#start small').textContent = 'PRESIONA DE NUEVO PARA ENTRAR';
       return;
@@ -249,7 +251,7 @@
   $('#exit-intro').addEventListener('click', async () => {
     if (switching) return;
     if (active !== 'menu') await showSection('menu');
-    started = false; cancelShot(); background.pause(); audio.setEnabled(false);
+    started = false; introMusicStarted = false; cancelShot(); background.pause(); audio.setEnabled(false);
     app.hidden = true; intro.hidden = false; safePlay(introVideo); intro.focus();
   });
   $('#music-toggle').addEventListener('click', () => audio.setEnabled(!audio.enabled));
