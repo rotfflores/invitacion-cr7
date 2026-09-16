@@ -62,7 +62,8 @@
     ensureMusic() {
       if (!C.audio.music) return null;
       if (!this.music) {
-        this.music = new Audio(C.audio.music);
+        this.music = $('#background-music') || new Audio();
+        if (this.music.getAttribute('src') !== C.audio.music) this.music.src = C.audio.music;
         this.music.loop = true;
         this.music.preload = 'auto';
         this.music.volume = Math.max(0, Math.min(1, C.audio.volume));
@@ -183,7 +184,7 @@
   // Entrada y cambio de pantalla: la música no se reinicia porque no se recarga el documento.
   async function startExperience() {
     if (switching || started) return;
-    started = true; switching = true; audio.setEnabled(true); audio.effect('unlock');
+    started = true; switching = true; audio.setEnabled(true);
     background.src = background.dataset.src; background.muted = true;
     if (!videoPaused) safePlay(background);
     app.hidden = false; app.classList.add('arriving'); intro.classList.add('departing');
