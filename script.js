@@ -59,16 +59,39 @@
       };
       playChord(); this.timer = setInterval(playChord, 3100);
     },
+    ensureMusic() {
+      if (!C.audio.music) return null;
+      if (!this.music) {
+        this.music = new Audio(C.audio.music);
+        this.music.loop = true;
+        this.music.preload = 'auto';
+        this.music.volume = Math.max(0, Math.min(1, C.audio.volume));
+      }
+      return this.music;
+    },
+    tryAutoplay() {
+      const music = this.ensureMusic();
+      if (!music) return;
+      this.enabled = true;
+      music.play().then(() => this.syncToggle()).catch(() => {
+        // La mayoría de navegadores exige el primer toque del visitante.
+      });
+    },
+    syncToggle() {
+      const toggle = $('#music-toggle');
+      if (!toggle) return;
+      toggle.setAttribute('aria-pressed', String(this.enabled));
+      toggle.setAttribute('aria-label', this.enabled ? 'Silenciar canción' : 'Activar canción');
+      $('use', toggle).setAttribute('href', this.enabled ? '#i-sound' : '#i-mute');
+    },
     setEnabled(enabled) {
       this.enabled = enabled;
       const toggle = $('#music-toggle');
-      toggle.setAttribute('aria-pressed', String(enabled));
-      toggle.setAttribute('aria-label', enabled ? 'Silenciar música y efectos' : 'Activar música y efectos');
-      $('use', toggle).setAttribute('href', enabled ? '#i-sound' : '#i-mute');
+      this.syncToggle();
       if (enabled) {
         this.init();
         if (C.audio.music) {
-          if (!this.music) { this.music = new Audio(C.audio.music); this.music.loop = true; this.music.volume = Math.max(0, Math.min(1, C.audio.volume)); }
+          this.ensureMusic();
           this.music.play().catch(() => this.synthMusic());
         } else this.synthMusic();
       } else {
@@ -115,10 +138,21 @@
     if (override.message) $('.memory-content p', card).textContent = override.message;
     const button = $('.memory-lock', card), content = $('.memory-content', card);
     content.id = `memory-${index}`; button.setAttribute('aria-controls', content.id);
-    button.addEventListener('click', () => {
+    button.addEventListener('click', async () => {
       if (!memoriesUnlocked.has(index)) { memoriesUnlocked.add(index); audio.effect('unlock'); }
       const open = button.getAttribute('aria-expanded') !== 'true';
-      content.hidden = !open; button.setAttribute('aria-expanded', String(open)); card.classList.add('unlocked');
+      if (open) {
+        content.hidden = false;
+        content.classList.remove('closing');
+        content.classList.add('opening');
+      } else {
+        content.classList.remove('opening');
+        content.classList.add('closing');
+        await wait(320);
+        content.hidden = true;
+        content.classList.remove('closing');
+      }
+      button.setAttribute('aria-expanded', String(open)); card.classList.add('unlocked');
       button.style.minHeight = '110px'; $('svg', button).style.display = 'none';
       $('small', button).textContent = open ? 'DESBLOQUEADO · TOCA PARA CERRAR' : 'DESBLOQUEADO · TOCA PARA VER';
       $('#story-progress').textContent = `${memoriesUnlocked.size} / 5 desbloqueados`;
@@ -157,7 +191,16 @@
     intro.classList.remove('departing'); app.classList.remove('arriving'); switching = false;
     $('#menu-title').focus({ preventScroll: true });
   }
-  $('#start').addEventListener('click', startExperience);
+  intro.addEventListener('click', startExperience);
+  intro.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      startExperience();
+    }
+  });
+  // Intenta iniciar la canción al cargar. Si el navegador la bloquea, el
+  // primer clic en cualquier parte de la portada la inicia junto con START.
+  audio.tryAutoplay();
   async function showSection(id) {
     if (switching || !started || !document.getElementById(id)?.classList.contains('screen')) return;
     if (id === active) { window.scrollTo(0, 0); return; }
@@ -167,6 +210,14 @@
     $('#breadcrumb').textContent = id === 'menu' ? 'MENÚ PRINCIPAL' : $('[data-section="' + id + '"] strong').textContent;
     window.scrollTo(0, 0);
     $('h1,h2', section)?.focus({ preventScroll: true });
+    if (id === 'menu') {
+      $$('.menu-card').forEach((card, index) => {
+        card.style.setProperty('--card-delay', `${index * 45}ms`);
+        card.classList.remove('card-return');
+        void card.offsetWidth;
+        card.classList.add('card-return');
+      });
+    }
     if (id === 'stats') {
       $$('.bar-fill').forEach(bar => bar.style.width = '0');
       requestAnimationFrame(() => requestAnimationFrame(() => $$('.bar-fill').forEach(bar => bar.style.width = `${bar.dataset.value}%`)));
@@ -174,13 +225,19 @@
     if (id === 'final') { $('#completion').hidden = false; $('#letter').hidden = true; }
     switching = false;
   }
-  $$('[data-section]').forEach(button => button.addEventListener('click', () => showSection(button.dataset.section)));
+  $$('[data-section]').forEach(button => button.addEventListener('click', async () => {
+    if (switching) return;
+    button.classList.add('card-selected');
+    await wait(300);
+    await showSection(button.dataset.section);
+    button.classList.remove('card-selected');
+  }));
   $$('[data-home]').forEach(button => button.addEventListener('click', () => showSection('menu')));
   $('#exit-intro').addEventListener('click', async () => {
     if (switching) return;
     if (active !== 'menu') await showSection('menu');
     started = false; cancelShot(); background.pause(); audio.setEnabled(false);
-    app.hidden = true; intro.hidden = false; safePlay(introVideo); $('#start').focus();
+    app.hidden = true; intro.hidden = false; safePlay(introVideo); intro.focus();
   });
   $('#music-toggle').addEventListener('click', () => audio.setEnabled(!audio.enabled));
   $('#video-toggle').addEventListener('click', () => {

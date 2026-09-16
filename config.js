@@ -34,8 +34,9 @@ window.INVITATION_CONFIG = {
   reward: { type: 'message', title: 'Acceso al equipo secreto', message: '¡Estás dentro! Tu misión es ayudarnos a sorprender a nuestra leyenda. Guarda el secreto y prepárate para celebrar a lo grande.', src: '', code: 'LEYENDA23' },
   audio: {
     volume: 0.12,
-    // Coloca tus MP3 en assets/audio/ y escribe la ruta. Vacío = sonido generado localmente.
-    // Ejemplo: music: 'assets/audio/musica.mp3'. No hay descargas ni servicios de pago.
-    music: '', click: '', unlock: '', goal: '', celebration: ''
+    // Canción principal. El navegador intentará reproducirla al cargar y la
+    // iniciará con el primer toque si su política bloquea el autoplay.
+    music: 'assets/audio/el-fin-del-mundo.mp3',
+    click: '', unlock: '', goal: '', celebration: ''
   }
 };

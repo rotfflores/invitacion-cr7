@@ -29,10 +29,10 @@
     <symbol id="i-mute" viewBox="0 0 24 24"><path d="m4 9 4 0 5-5v16l-5-5H4V9Zm12 0 6 6m0-6-6 6"/></symbol>
     <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3 7 7 1-5 5 1 7-6-4-6 4 1-7-5-5 7-1 3-7Z"/></symbol>
   </defs></svg>
-  <div id="intro" class="intro">
+  <div id="intro" class="intro" role="button" tabindex="0" aria-label="Presiona en cualquier parte para iniciar la invitación">
     <video id="intro-video" class="intro-video" autoplay loop playsinline muted preload="auto" poster="assets/intro-poster.jpg" aria-hidden="true"><source src="assets/intro-cr7-loop.mp4" type="video/mp4"></video>
     <div class="intro-shade"></div><div class="grain"></div>
-    <button class="start" id="start" type="button">Presiona start</button>
+    <div class="start" id="start" aria-hidden="true">Presiona start<small>TOCA EN CUALQUIER PARTE</small></div>
   </div>
   <div id="app" class="app" hidden>
     <video id="background-video" class="background-video" loop playsinline muted preload="none" poster="assets/invitacion-poster.jpg" aria-hidden="true" data-src="assets/invitacion-loop.mp4"></video>
