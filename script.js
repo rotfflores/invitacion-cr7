@@ -75,7 +75,10 @@
       if (!music) return;
       this.enabled = true;
       music.play().then(() => this.syncToggle()).catch(() => {
-        // La mayoría de navegadores exige el primer toque del visitante.
+        // Respaldo para navegadores que bloquean sonido antes del primer gesto.
+        this.enabled = false;
+        this.syncToggle();
+        $('#start small').textContent = 'TOCA PARA ACTIVAR LA CANCIÓN';
       });
     },
     syncToggle() {
@@ -192,11 +195,20 @@
     intro.classList.remove('departing'); app.classList.remove('arriving'); switching = false;
     $('#menu-title').focus({ preventScroll: true });
   }
-  intro.addEventListener('click', startExperience);
+  function activateIntro() {
+    const music = audio.ensureMusic();
+    if (music?.paused) {
+      audio.setEnabled(true);
+      $('#start small').textContent = 'PRESIONA DE NUEVO PARA ENTRAR';
+      return;
+    }
+    startExperience();
+  }
+  intro.addEventListener('click', activateIntro);
   intro.addEventListener('keydown', event => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      startExperience();
+      activateIntro();
     }
   });
   // Intenta iniciar la canción al cargar. Si el navegador la bloquea, el
