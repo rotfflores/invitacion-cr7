@@ -77,3 +77,19 @@
 @media(min-width:720px){.rsvp-panel{grid-template-columns:minmax(0,1fr) auto}.rsvp-button{min-width:250px}}
 .rsvp-action{display:grid;gap:8px}.rsvp-action label{color:#d7c887;font:700 9px var(--sans);letter-spacing:.17em}.rsvp-action input{width:100%;min-height:48px;padding:12px 15px;border:1px solid #ffffff28;border-radius:0;background:#07100dcf;color:#f7f3e7;font:600 15px var(--sans);outline:none;transition:border-color .2s,box-shadow .2s}.rsvp-action input::placeholder{color:#77817b}.rsvp-action input:focus{border-color:#e9c976;box-shadow:0 0 0 3px #e9c9761f}.rsvp-action input:disabled{opacity:.62}
 @media(min-width:720px){.rsvp-panel{grid-template-columns:minmax(0,1fr) minmax(270px,340px)}}
+
+/* Datos de la carta: conserva la silueta y el dorado con una jerarquía más clara. */
+.player-info{position:relative;isolation:isolate;overflow:hidden;padding:25px 25px 28px;background:radial-gradient(circle at 50% -25%,#f4dfa34d,transparent 52%),linear-gradient(125deg,#3a2d16 0%,#9f854c 48%,#493a1e 100%);color:#fff8dd;text-align:center;box-shadow:inset 0 1px 0 #fff4,inset 0 18px 30px #fff1}
+.player-info:before{content:'';position:absolute;z-index:-1;top:0;left:12%;right:12%;height:2px;background:linear-gradient(90deg,transparent,var(--gold-light),transparent);box-shadow:0 0 16px #ffdfa580}
+.player-info:after{content:'CR7';position:absolute;z-index:-1;right:-9px;top:8px;color:#fff08;font:italic 900 82px/.8 var(--display);letter-spacing:-.07em;transform:rotate(-7deg)}
+.player-nickname{position:relative;display:inline-flex;align-items:center;gap:8px;padding:6px 13px;background:#17170f73;color:var(--gold-light);font:700 9px/1 var(--body);letter-spacing:.24em;text-transform:uppercase;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.player-nickname:before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold-light);box-shadow:0 0 10px var(--gold-light)}
+.player-info h3{position:relative;margin:10px 0 16px;color:#fff9e6;font:italic 800 clamp(38px,10vw,48px)/.9 var(--display);letter-spacing:.015em;text-transform:uppercase;text-shadow:0 3px 13px #241704a8}
+.player-meta{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0;border:0!important;background:none;font-size:12px;text-align:left}
+.player-meta>span,.player-meta>strong{display:flex;min-height:54px;flex-direction:column;justify-content:center;padding:9px 12px;background:#11150f70;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.player-meta>span:before,.player-meta>strong:before{display:block;margin-bottom:4px;color:#e9d99d;font:700 7px/1 var(--body);letter-spacing:.2em}
+.player-meta>span:before{content:'ORIGEN'}.player-meta>strong:before{content:'DORSAL'}
+.player-meta>strong{align-items:flex-end;color:#fff9e6;font:italic 800 20px/.9 var(--display)}
+.card-label{position:relative;display:flex;align-items:center;gap:10px;margin-top:17px;color:#fff3c7;font:700 7px/1 var(--body);letter-spacing:.2em;white-space:nowrap}
+.card-label:before,.card-label:after{content:'';height:1px;flex:1;background:linear-gradient(90deg,transparent,#f7df9c88)}.card-label:after{background:linear-gradient(90deg,#f7df9c88,transparent)}
+@media(max-width:380px){.player-info{padding-inline:18px}.card-label{font-size:6px;letter-spacing:.14em}.player-meta>span,.player-meta>strong{padding-inline:9px}}
