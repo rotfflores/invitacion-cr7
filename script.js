@@ -262,6 +262,54 @@
 
     $('#video-toggle').setAttribute('aria-pressed', String(videoPaused));
   });
+  const rsvpButton = $('#rsvp-button'), rsvpStatus = $('#rsvp-status'), rsvpName = $('#rsvp-name');
+  const cleanGuestName = () => rsvpName.value.trim().replace(/\s+/g, ' ').slice(0, 40);
+  function renderRsvp(confirmed) {
+    const guestName = cleanGuestName().toUpperCase();
+    rsvpButton.classList.toggle('confirmed', confirmed);
+    rsvpButton.setAttribute('aria-pressed', String(confirmed));
+    rsvpName.disabled = confirmed;
+    $('span', rsvpButton).textContent = confirmed
+      ? `${guestName} · ASISTENCIA CONFIRMADA`
+      : 'CONFIRMAR ASISTENCIA';
+    rsvpStatus.textContent = confirmed
+      ? `✓ ${guestName}, TU ASISTENCIA ESTÁ CONFIRMADA · NOS VEMOS EN LA FIESTA`
+      : '';
+    rsvpStatus.hidden = !confirmed;
+  }
+  let rsvpConfirmed = false;
+  try {
+    const storedName = localStorage.getItem('cr7-rsvp-name') || '';
+    rsvpConfirmed = localStorage.getItem('cr7-rsvp-confirmed') === 'true' && Boolean(storedName.trim());
+    rsvpName.value = rsvpConfirmed ? storedName : '';
+    if (!rsvpConfirmed) localStorage.removeItem('cr7-rsvp-name');
+  } catch {}
+  renderRsvp(rsvpConfirmed);
+  rsvpButton.addEventListener('click', () => {
+    if (!rsvpConfirmed && !cleanGuestName()) {
+      rsvpStatus.textContent = 'ESCRIBE TU NOMBRE PARA CONFIRMAR TU ASISTENCIA.';
+      rsvpStatus.hidden = false;
+      rsvpName.focus();
+      return;
+    }
+    rsvpConfirmed = !rsvpConfirmed;
+    try {
+      if (rsvpConfirmed) {
+        rsvpName.value = cleanGuestName();
+        localStorage.setItem('cr7-rsvp-name', rsvpName.value);
+        localStorage.setItem('cr7-rsvp-confirmed', 'true');
+      } else {
+        localStorage.removeItem('cr7-rsvp-confirmed');
+        localStorage.removeItem('cr7-rsvp-name');
+        rsvpName.value = '';
+      }
+    } catch {}
+    renderRsvp(rsvpConfirmed);
+    if (rsvpConfirmed) { audio.effect('unlock'); confetti(); }
+  });
+  rsvpName.addEventListener('input', () => {
+    if (!rsvpConfirmed) rsvpStatus.hidden = true;
+  });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { introVideo.pause(); background.pause(); audio.music?.pause(); audio.context?.suspend().catch(() => {}); }
     else {

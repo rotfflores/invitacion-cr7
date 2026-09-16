@@ -4,23 +4,29 @@
 window.INVITATION_CONFIG = {
   // Nombre, lugar y hora de ejemplo; cámbialos aquí por los datos definitivos.
   name: 'Alex', nickname: 'El Comandante', number: '7', position: 'LEYENDA', overall: 99,
-  city: 'Durango, Dgo.', flag: '', photo: 'assets/photos/cr7-perfil.webp',
+  city: 'Durango, Dgo.', flag: '', photo: 'assets/photos/mexicano-4.jpg',
   age: 23,
   venue: 'Casa La Cancha',
   address: 'Calle Gol de Oro 23 · Durango, Dgo.',
   venueNote: 'Casa y dirección de ejemplo para esta invitación.',
   partyTime: '8:00 p. m.',
   arrivalTime: '7:30 p. m.',
-  photoAlt: 'Cristiano Ronaldo con Portugal, imagen temática de la tarjeta',
-  surpriseTitle: '¡Que no se entere!',
-  surpriseMessage: 'Es una fiesta sorpresa. No le cuentes al festejado, no le reenvíes esta invitación y guarda las publicaciones para después de la sorpresa.',
+  photoAlt: 'Retrato natural de un joven en una calle de Puebla, México',
+  surpriseTitle: 'Él cree que es un plan cualquiera.',
+  surpriseMessage: 'Llega antes de las 7:30, entra sin hacer ruido y no subas historias. Cuando llegue Alex, que nos encuentre a todos listos.',
   introVideo: 'assets/intro-cr7-loop.mp4', backgroundVideo: 'assets/invitacion-loop.mp4',
   stats: { Mentalidad: 99, Disciplina: 98, Lealtad: 100, Carisma: 97, Estilo: 99 },
   celebrationStat: 'SIUUU',
   statsMessage: 'Los números confirman lo que todos ya sabíamos: estamos frente a una leyenda.',
   // Opcional: { image: 'assets/recuerdo.jpg', title: 'Título', message: 'Texto' }.
   // Un objeto vacío conserva la imagen y los textos escritos en el HTML.
-  memories: [{}, {}, {}, {}, {}],
+  memories: [
+    { image: 'assets/photos/mexicano-10.jpg' },
+    { image: 'assets/photos/mexicano-5.jpg' },
+    { image: 'assets/photos/mexicano-8.jpg' },
+    { image: 'assets/photos/mexicano-6.jpg' },
+    { image: 'assets/photos/mexicano-4.jpg' }
+  ],
   trophies: [
     { title: 'Trofeo a la mejor actitud', message: 'Por encontrar una oportunidad para sonreír en cada partido de la vida.' },
     { title: 'Trofeo a la persona más divertida', message: 'Por convertir cualquier momento en una celebración.' },
